@@ -1,0 +1,677 @@
+openapi: 3.1.0
+info:
+  title: OpenAIRE Search API
+  description: API for searching research products, such as publications, software, datasets and other material, in the OpenAIRE Graph database. https://graph.openaire.eu
+  version: 1.0.0
+servers:
+  - url: https://api.openaire.eu
+    description: API base url of the main production server
+components:
+  schemas: {}
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Page number of the search results.
+      required: false
+      schema:
+        type: integer
+    size:
+      name: size
+      in: query
+      description: Number of results per page.
+      required: false
+      schema:
+        type: integer
+    format:
+      name: format
+      in: query
+      description: The format of the response. The default is xml.
+      required: false
+      schema:
+        type: string
+        enum: [json, xml, csv, tsv]
+    model:
+      name: model
+      in: query
+      description: |
+        The data model of the response. Default is openaire. Model sygma is a simplified version of the openaire model. For sygma, only the xml format is available.
+      required: false
+      schema:
+        type: string
+        enum: [openaire, sygma]
+    sortBy:
+      name: sortBy
+      in: query
+      description: |
+        The sorting order of the specified field. Can be one of: dateofcollection, resultstoragedate, resultembargoenddate, resultembargoendyear, resultdateofacceptance, resultacceptanceyear, influence, popularity, citationCount, impulse.
+        Multiple sorting is supported by repeating the sortBy parameter. Accepted values for order: ascending, descending.
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+    hasECFunding:
+      name: hasECFunding
+      in: query
+      description: If true, gets the entities funded by the EC. If false, gets the entities not funded by the EC.
+      required: false
+      schema:
+        type: boolean
+    hasWTFunding:
+      name: hasWTFunding
+      in: query
+      description: If true, gets the entities funded by Wellcome Trust. If false, gets the entities not funded by Wellcome Trust.
+      required: false
+      schema:
+        type: boolean
+    funder:
+      name: funder
+      in: query
+      description: Search for entities by funder.
+      required: false
+      schema:
+        type: string
+        enum: [WT, EC, ARC, ANDS, NSF, FCT, NHMRC, NWO]
+    fundingStream:
+      name: fundingStream
+      in: query
+      description: Search for entities by funding stream.
+      required: false
+      schema:
+        type: string
+    FP7scientificArea:
+      name: FP7scientificArea
+      in: query
+      description: Search for FP7 entities by scientific area.
+      required: false
+      schema:
+        type: string
+    keywords:
+      name: keywords
+      in: query
+      description: List of keywords to search for in various fields.
+      required: false
+      schema:
+        type: string
+    doi:
+      name: doi
+      in: query
+      description: Gets the research products with the given DOIs.
+      required: false
+      schema:
+        type: string
+    orcid:
+      name: orcid
+      in: query
+      description: Gets the research products linked to the given ORCID iD of an author.
+      required: false
+      schema:
+        type: string
+    fromDateAccepted:
+      name: fromDateAccepted
+      in: query
+      description: Gets the research products whose date of acceptance is greater than or equal to the given date.
+      required: false
+      schema:
+        type: string
+        format: date
+    toDateAccepted:
+      name: toDateAccepted
+      in: query
+      description: Gets the research products whose date of acceptance is less than or equal to the given date.
+      required: false
+      schema:
+        type: string
+        format: date
+    title:
+      name: title
+      in: query
+      description: Gets the research products whose titles contain the given list of keywords.
+      required: false
+      schema:
+        type: string
+    author:
+      name: author
+      in: query
+      description: Search for research products by authors.
+      required: false
+      schema:
+        type: string
+    OA:
+      name: OA
+      in: query
+      description: If true, gets Open Access research products. If false, gets the non-Open Access research products.
+      required: false
+      schema:
+        type: boolean
+    projectID:
+      name: projectID
+      in: query
+      description: Search for research products of the project with the specified projectID.
+      required: false
+      schema:
+        type: string
+    country:
+      name: country
+      in: query
+      description: Search for research products associated with the country code.
+      required: false
+      schema:
+        type: string
+    influence:
+      name: influence
+      in: query
+      description: | 
+        Search for research products based on their influence. 
+        C1 for top 0.01% in terms of influence , 
+        C2 for top 0.1% in terms of influence , 
+        C3 for top 1% in terms of influence , 
+        C4 for top 10% in terms of influence , 
+        C5 for average/low in terms of influence. 
+        Comma separated list of values or repeat of the parameter for each value will form a query with OR semantics, eg. ?influence=C1&influence=C2
+      required: false
+      schema:
+        type: string
+        enum: [C1, C2, C3, C4, C5]
+    popularity:
+      name: popularity
+      in: query
+      description: |
+        Search for research products based on their popularity. C1 for top 0.01% in terms of popularity , C2 for top 0.1% in terms of popularity , C3 for top 1% in terms of popularity , C4 for top 10% in terms of popularity , C5 for average/low in terms of popularity. Comma separated list of values or repeat of the parameter for each value will form a query with OR semantics, eg. ?popularity=C1&popularity=C2
+      required: false
+      schema:
+        type: string
+        enum: [C1, C2, C3, C4, C5]
+    impulse:
+      name: impulse
+      in: query
+      description: |
+        Search for research products based on their impulse. C1 for top 0.01% in terms of impulse , C2 for top 0.1% in terms of impulse , C3 for top 1% in terms of impulse , C4 for top 10% in terms of impulse , C5 for average/low in terms of impulse. Comma separated list of values or repeat of the parameter for each value will form a query with OR semantics, eg. ?impulse=C1&impulse=C2
+      required: false
+      schema:
+        type: string
+        enum: [C1, C2, C3, C4, C5]
+    citationCount:
+      name: citationCount
+      in: query
+      description: |
+        Search for research products based on their citation count. C1 for top 0.01% in terms of citation count , C2 for top 0.1% in terms of citation count , C3 for top 1% in terms of citation count , C4 for top 10% in terms of citation count , C5 for average/low in terms of citation count. Comma separated list of values or repeat of the parameter for each value will form a query with OR semantics, eg. ?citationCount=C1&citationCount=C2
+      required: false
+      schema:
+        type: string
+        enum: [C1, C2, C3, C4, C5]
+    openaireProviderID:
+      name: openaireProviderID
+      in: query
+      description: Search for research products by OpenAIRE data provider identifier.
+      required: false
+      schema:
+        type: string
+    openaireProjectID:
+      name: openaireProjectID
+      in: query
+      description: Search for research products by OpenAIRE project identifier.
+      required: false
+      schema:
+        type: string
+    hasProject:
+      name: hasProject
+      in: query
+      description: If true, gets the research products that have a link to a project. If false, gets the publications with no links to projects.
+      required: false
+      schema:
+        type: boolean
+    FP7ProjectID:
+      name: FP7ProjectID
+      in: query
+      description: Search for research products associated with an FP7 project with the given grant number.
+      required: false
+      schema:
+        type: string
+    instancetype:
+      name: instancetype
+      in: query
+      description: Gets the publication of the given type, if any.
+      required: false
+      schema:
+        type: string
+    originalId:
+      name: originalId
+      in: query
+      description: Gets the publication with the given OpenAIRE identifier, if any.
+      required: false
+      schema:
+        type: string
+    sdg:
+      name: sdg
+      in: query
+      description: Gets the publications that are classified with the respective Sustainable Development Goal number.
+      required: false
+      schema:
+        type: integer
+        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    fos:
+      name: fos
+      in: query
+      description: Gets the publications that are classified with the respective Field of Science classification value.
+      required: false
+      schema:
+        type: string
+    openairePublicationID:
+      name: openairePublicationID
+      in: query
+      description: Gets the publication with the given OpenAIRE identifier, if any.
+      required: false
+      schema:
+        type: string
+    peerReviewed:
+      name: peerReviewed
+      in: query
+      description: Specify if the publications are peer-reviewed or not.
+      required: false
+      schema:
+        type: boolean
+    diamondJournal:
+      name: diamondJournal
+      in: query
+      description: Specify if the publications are published in a diamond journal or not.
+      required: false
+      schema:
+        type: boolean
+    publiclyFunded:
+      name: publiclyFunded
+      in: query
+      description: Specify if the publications are publicly funded or not.
+      required: false
+      schema:
+        type: boolean
+    green:
+      name: green
+      in: query
+      description: Specify if the publications are green open access or not.
+      required: false
+      schema:
+        type: boolean
+    openAccessColor:
+      name: openAccessColor
+      in: query
+      description: Specify the open access color of a publication.
+      required: false
+      schema:
+        type: string
+        enum: [gold, bronze, hybrid]
+    openaireDatasetID:
+      name: openaireDatasetID
+      in: query
+      description: |
+        Gets the research data set with the given openaire identifier, if any. Comma separated list of OpenAIRE identifiers. Alternatively, it is possible to repeat the parameter for each requested identifier.
+      required: false
+      schema:
+        type: string 
+    openaireSoftwareID:
+      name: openaireSoftwareID
+      in: query
+      description: |
+        Gets the research software with the given openaire identifier, if any. Comma separated list of OpenAIRE identifiers. Alternatively, it is possible to repeat the parameter for each requested identifier.
+      required: false
+      schema:
+        type: string
+    openaireOtherID:
+      name: openaireOtherID
+      in: query
+      description: |
+        Gets the other research products with the given openaire identifier, if any. Comma separated list of OpenAIRE identifiers. Alternatively, it is possible to repeat the parameter for each requested identifier.
+      required: false
+      schema:
+        type: string
+  responses:
+    SuccessfulResponse:
+      description: A successful response containing the list of research products matching the search criteria.
+      headers:
+        x-ratelimit-limit:
+          description: The maximum number of requests allowed for the client in one time window.
+          schema:
+            type: integer
+        x-ratelimit-used:
+          description: The number of requests already made by the client in the current time window.
+          schema:
+            type: integer
+      content:
+        application/xml:
+          schema:
+            type: string
+            description: |
+              XML response following the OAF (OpenAIRE Format). 
+              See the XML schema: https://www.openaire.eu/schema/latest/oaf.xsd
+        application/json:
+          schema:
+            type: object
+            description: |
+              JSON response following the OAF (OpenAIRE Format).
+              See the JSON schema: https://www.openaire.eu/schema/latest/oaf.xsd
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Not found"
+              description:
+                type: string
+                example: "Invalid request path."
+    RateLimitAbuse:
+      description: Rate limit abuse
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Too many requests"
+              description:
+                type: string
+                example: "Request rate exceeded. Slow down."
+    BadRequest:
+      description: Bad request due to missing or invalid parameters (only for authenticated requests).
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              code:
+                type: string
+                example: "400"
+              message:
+                type: string
+                example: "Bad Request"
+              description:
+                type: string
+                example: "Missing refreshToken parameter"
+    Unauthorized:
+      description: Unauthorized access due to invalid or missing credentials (only for authenticated requests).
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "unauthorized"
+              description:
+                type: string
+                example: "Client id must not be empty!"
+    Forbidden:
+      description: Forbidden access due to invalid access token.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Token invalid"
+              description:
+                type: string
+                example: "Authorization header value invalid."
+
+paths:
+  /search/researchProducts:
+    get:
+      operationId: searchResearchProducts
+      summary: Search for Research Products
+      description: Retrieves a list of publications, research data sets, research software, or other material based on search criteria.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/model'
+        - $ref: '#/components/parameters/sortBy'
+        - $ref: '#/components/parameters/hasECFunding'
+        - $ref: '#/components/parameters/hasWTFunding'
+        - $ref: '#/components/parameters/funder'
+        - $ref: '#/components/parameters/fundingStream'
+        - $ref: '#/components/parameters/FP7scientificArea'
+        - $ref: '#/components/parameters/keywords'
+        - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/orcid'
+        - $ref: '#/components/parameters/fromDateAccepted'
+        - $ref: '#/components/parameters/toDateAccepted'
+        - $ref: '#/components/parameters/title'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/OA'
+        - $ref: '#/components/parameters/projectID'
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/influence'
+        - $ref: '#/components/parameters/popularity'
+        - $ref: '#/components/parameters/impulse'
+        - $ref: '#/components/parameters/citationCount'
+        - $ref: '#/components/parameters/openaireProviderID'
+        - $ref: '#/components/parameters/openaireProjectID'
+        - $ref: '#/components/parameters/hasProject'
+        - $ref: '#/components/parameters/FP7ProjectID'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimitAbuse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /search/publications:
+    get:
+      operationId: searchPublications
+      summary: Search for publications
+      description: Retrieves a list of only publications based on search criteria.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/model'
+        - $ref: '#/components/parameters/sortBy'
+        - $ref: '#/components/parameters/hasECFunding'
+        - $ref: '#/components/parameters/hasWTFunding'
+        - $ref: '#/components/parameters/funder'
+        - $ref: '#/components/parameters/fundingStream'
+        - $ref: '#/components/parameters/FP7scientificArea'
+        - $ref: '#/components/parameters/keywords'
+        - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/orcid'
+        - $ref: '#/components/parameters/fromDateAccepted'
+        - $ref: '#/components/parameters/toDateAccepted'
+        - $ref: '#/components/parameters/title'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/OA'
+        - $ref: '#/components/parameters/projectID'
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/influence'
+        - $ref: '#/components/parameters/popularity'
+        - $ref: '#/components/parameters/impulse'
+        - $ref: '#/components/parameters/citationCount'
+        - $ref: '#/components/parameters/openaireProviderID'
+        - $ref: '#/components/parameters/openaireProjectID'
+        - $ref: '#/components/parameters/hasProject'
+        - $ref: '#/components/parameters/FP7ProjectID'
+        - $ref: '#/components/parameters/instancetype'
+        - $ref: '#/components/parameters/originalId'
+        - $ref: '#/components/parameters/sdg'
+        - $ref: '#/components/parameters/fos'
+        - $ref: '#/components/parameters/openairePublicationID'
+        - $ref: '#/components/parameters/peerReviewed'
+        - $ref: '#/components/parameters/diamondJournal'
+        - $ref: '#/components/parameters/publiclyFunded'
+        - $ref: '#/components/parameters/green'
+        - $ref: '#/components/parameters/openAccessColor'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimitAbuse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /search/datasets:
+    get:
+      operationId: searchDatasets
+      summary: Search for Research Data Sets
+      description: Retrieves a list of only Research Data Sets based on search criteria.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/model'
+        - $ref: '#/components/parameters/sortBy'
+        - $ref: '#/components/parameters/hasECFunding'
+        - $ref: '#/components/parameters/hasWTFunding'
+        - $ref: '#/components/parameters/funder'
+        - $ref: '#/components/parameters/fundingStream'
+        - $ref: '#/components/parameters/FP7scientificArea'
+        - $ref: '#/components/parameters/keywords'
+        - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/orcid'
+        - $ref: '#/components/parameters/fromDateAccepted'
+        - $ref: '#/components/parameters/toDateAccepted'
+        - $ref: '#/components/parameters/title'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/OA'
+        - $ref: '#/components/parameters/projectID'
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/influence'
+        - $ref: '#/components/parameters/popularity'
+        - $ref: '#/components/parameters/impulse'
+        - $ref: '#/components/parameters/citationCount'
+        - $ref: '#/components/parameters/openaireProviderID'
+        - $ref: '#/components/parameters/openaireProjectID'
+        - $ref: '#/components/parameters/hasProject'
+        - $ref: '#/components/parameters/FP7ProjectID'
+        - $ref: '#/components/parameters/openaireDatasetID'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimitAbuse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /search/software:
+    get:
+      operationId: searchSoftware
+      summary: Search for only Research software
+      description: Retrieves a list of only Research Software based on search criteria.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/model'
+        - $ref: '#/components/parameters/sortBy'
+        - $ref: '#/components/parameters/hasECFunding'
+        - $ref: '#/components/parameters/hasWTFunding'
+        - $ref: '#/components/parameters/funder'
+        - $ref: '#/components/parameters/fundingStream'
+        - $ref: '#/components/parameters/FP7scientificArea'
+        - $ref: '#/components/parameters/keywords'
+        - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/orcid'
+        - $ref: '#/components/parameters/fromDateAccepted'
+        - $ref: '#/components/parameters/toDateAccepted'
+        - $ref: '#/components/parameters/title'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/OA'
+        - $ref: '#/components/parameters/projectID'
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/influence'
+        - $ref: '#/components/parameters/popularity'
+        - $ref: '#/components/parameters/impulse'
+        - $ref: '#/components/parameters/citationCount'
+        - $ref: '#/components/parameters/openaireProviderID'
+        - $ref: '#/components/parameters/openaireProjectID'
+        - $ref: '#/components/parameters/hasProject'
+        - $ref: '#/components/parameters/FP7ProjectID'
+        - $ref: '#/components/parameters/openaireSoftwareID'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimitAbuse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /search/other:
+    get:
+      operationId: searchOther
+      summary: Search for other research products
+      description: Retrieves a list of other research products, that are not publications, research data sets, or research software, based on search criteria.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/model'
+        - $ref: '#/components/parameters/sortBy'
+        - $ref: '#/components/parameters/hasECFunding'
+        - $ref: '#/components/parameters/hasWTFunding'
+        - $ref: '#/components/parameters/funder'
+        - $ref: '#/components/parameters/fundingStream'
+        - $ref: '#/components/parameters/FP7scientificArea'
+        - $ref: '#/components/parameters/keywords'
+        - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/orcid'
+        - $ref: '#/components/parameters/fromDateAccepted'
+        - $ref: '#/components/parameters/toDateAccepted'
+        - $ref: '#/components/parameters/title'
+        - $ref: '#/components/parameters/author'
+        - $ref: '#/components/parameters/OA'
+        - $ref: '#/components/parameters/projectID'
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/influence'
+        - $ref: '#/components/parameters/popularity'
+        - $ref: '#/components/parameters/impulse'
+        - $ref: '#/components/parameters/citationCount'
+        - $ref: '#/components/parameters/openaireProviderID'
+        - $ref: '#/components/parameters/openaireProjectID'
+        - $ref: '#/components/parameters/hasProject'
+        - $ref: '#/components/parameters/FP7ProjectID'
+        - $ref: '#/components/parameters/openaireOtherID'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimitAbuse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
