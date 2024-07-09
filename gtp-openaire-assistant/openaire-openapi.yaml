@@ -1,0 +1,318 @@
+openapi: 3.1.0
+info:
+  title: OpenAIRE Search API
+  description: API for searching publications in the OpenAIRE database.
+  version: 1.0.0
+servers:
+  - url: https://api.openaire.eu
+    description: Main production server
+paths:
+  /search/publications:
+    get:
+      operationId: searchPublications
+      summary: Search for publications
+      description: Retrieves a list of publications based on search criteria.
+      parameters:
+        - name: page
+          in: query
+          description: Page number of the search results.
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          description: Number of results per page.
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format of the response. The default is xml.
+          required: false
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+              - csv
+              - tsv
+        - name: model
+          in: query
+          description: The data model of the response. Default is openaire. Model sygma is a simplified version of the openaire
+            model. For sygma, only the xml format is available.
+          required: false
+          schema:
+            type: string
+            enum:
+              - openaire
+              - sygma
+        - name: sortBy
+          in: query
+          description: >
+            The sorting order of the specified field. Can be one of: dateofcollection, resultstoragedate,
+            resultembargoenddate, resultembargoendyear, resultdateofacceptance, resultacceptanceyear, influence,
+            popularity, citationCount, impulse. 
+
+            Multiple sorting is supported by repeating the sortBy parameter. 
+
+            Accepted values for order: ascending, descending.
+          required: false
+          schema:
+            type: string
+        - name: hasECFunding
+          in: query
+          description: If true, gets the entities funded by the EC. If false, gets the entities not funded by the EC.
+          required: false
+          schema:
+            type: boolean
+        - name: hasWTFunding
+          in: query
+          description: If true, gets the entities funded by Wellcome Trust. If false, gets the entities not funded by Wellcome
+            Trust.
+          required: false
+          schema:
+            type: boolean
+        - name: funder
+          in: query
+          description: Search for entities by funder.
+          required: false
+          schema:
+            type: string
+            enum:
+              - WT
+              - EC
+              - ARC
+              - ANDS
+              - NSF
+              - FCT
+              - NHMRC
+              - NWO
+        - name: fundingStream
+          in: query
+          description: Search for entities by funding stream.
+          required: false
+          schema:
+            type: string
+        - name: FP7scientificArea
+          in: query
+          description: Search for FP7 entities by scientific area.
+          required: false
+          schema:
+            type: string
+        - name: keywords
+          in: query
+          description: List of keywords to search for in various fields.
+          required: false
+          schema:
+            type: string
+        - name: doi
+          in: query
+          description: Gets the research products with the given DOIs.
+          required: false
+          schema:
+            type: string
+        - name: orcid
+          in: query
+          description: Gets the research products linked to the given ORCID iD of an author.
+          required: false
+          schema:
+            type: string
+        - name: fromDateAccepted
+          in: query
+          description: Gets the research products whose date of acceptance is greater than or equal to the given date.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: toDateAccepted
+          in: query
+          description: Gets the research products whose date of acceptance is less than or equal to the given date.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: title
+          in: query
+          description: Gets the research products whose titles contain the given list of keywords.
+          required: false
+          schema:
+            type: string
+        - name: author
+          in: query
+          description: Search for research products by authors.
+          required: false
+          schema:
+            type: string
+        - name: OA
+          in: query
+          description: If true, gets Open Access research products. If false, gets the non-Open Access research products.
+          required: false
+          schema:
+            type: boolean
+        - name: projectID
+          in: query
+          description: Search for research products of the project with the specified projectID.
+          required: false
+          schema:
+            type: string
+        - name: country
+          in: query
+          description: Search for research products associated to the country code.
+          required: false
+          schema:
+            type: string
+        - name: influence
+          in: query
+          description: Search for research products based on their influence.
+          required: false
+          schema:
+            type: string
+            enum:
+              - C1
+              - C2
+              - C3
+              - C4
+              - C5
+        - name: popularity
+          in: query
+          description: Search for research products based on their popularity.
+          required: false
+          schema:
+            type: string
+            enum:
+              - C1
+              - C2
+              - C3
+              - C4
+              - C5
+        - name: impulse
+          in: query
+          description: Search for research products based on their impulse.
+          required: false
+          schema:
+            type: string
+            enum:
+              - C1
+              - C2
+              - C3
+              - C4
+              - C5
+        - name: citationCount
+          in: query
+          description: Search for research products based on their citation count.
+          required: false
+          schema:
+            type: string
+            enum:
+              - C1
+              - C2
+              - C3
+              - C4
+              - C5
+        - name: openaireProviderID
+          in: query
+          description: Search for research products by OpenAIRE data provider identifier.
+          required: false
+          schema:
+            type: string
+        - name: openaireProjectID
+          in: query
+          description: Search for research products by OpenAIRE project identifier.
+          required: false
+          schema:
+            type: string
+        - name: hasProject
+          in: query
+          description: If true, gets the research products that have a link to a project. If false, gets the publications with no
+            links to projects.
+          required: false
+          schema:
+            type: boolean
+        - name: FP7ProjectID
+          in: query
+          description: Search for research products associated to a FP7 project with the given grant number.
+          required: false
+          schema:
+            type: string
+        - name: instancetype
+          in: query
+          description: Gets the publication of the given type, if any.
+          required: false
+          schema:
+            type: string
+        - name: originalId
+          in: query
+          description: Gets the publication with the given OpenAIRE identifier, if any.
+          required: false
+          schema:
+            type: string
+        - name: sdg
+          in: query
+          description: Gets the publications that are classified with the respective Sustainable Development Goal number.
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 6
+              - 7
+              - 8
+              - 9
+              - 10
+              - 11
+              - 12
+              - 13
+              - 14
+              - 15
+              - 16
+              - 17
+        - name: fos
+          in: query
+          description: Gets the publications that are classified with the respective Field of Science classification value.
+          required: false
+          schema:
+            type: string
+        - name: openairePublicationID
+          in: query
+          description: Gets the publication with the given OpenAIRE identifier, if any.
+          required: false
+          schema:
+            type: string
+        - name: peerReviewed
+          in: query
+          description: Specify if the publications are peer-reviewed or not.
+          required: false
+          schema:
+            type: boolean
+        - name: diamondJournal
+          in: query
+          description: Specify if the publications are published in a diamond journal or not.
+          required: false
+          schema:
+            type: boolean
+        - name: publiclyFunded
+          in: query
+          description: Specify if the publications are publicly funded or not.
+          required: false
+          schema:
+            type: boolean
+        - name: green
+          in: query
+          description: Specify if the publications are green open access or not.
+          required: false
+          schema:
+            type: boolean
+        - name: openAccessColor
+          in: query
+          description: Specify the open access color of a publication.
+          required: false
+          schema:
+            type: string
+            enum:
+              - gold
+              - bronze
+              - hybrid
