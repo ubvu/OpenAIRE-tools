@@ -2,6 +2,8 @@
 
 This file contains the configuration to recreate the OpenAIRE Assistant with Chat-GPTs.
 
+Link to current [GPT OpenAIRE Assistant](https://chatgpt.com/g/g-Jm83wrCpH-openaire-assistant)
+
 The assistant searches the OpenAIRE graph using the API, and dynamically usingthe parameters based on matching the user question with the parameter descriptions. The rsponse is formatted using a template, enphasizing transparancy of the api request, and also generating the use of research for society, as practical implication and as match to a societal challenge using the sustainable development goals as reference framework.
 
 ## Description
