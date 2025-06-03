@@ -1,0 +1,467 @@
+openapi: 3.1.0
+info:
+  title: Altmetric Explorer API
+  description: The Altmetric Explorer API gives programmatic access to all of the research outputs and attention data within your instance of the Altmetric Explorer.
+  version: 1.0.0
+servers:
+  - url: https://www.altmetric.com/explorer/api
+    description: Main (production) server
+paths:
+  /research_outputs:
+    get:
+      operationId: getResearchOutputs
+      summary: Get research outputs
+      description: Retrieves a list of research outputs matching your query.
+      parameters:
+        - name: digest
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: filter[q]
+          in: query
+          schema:
+            type: string
+        - name: filter[scope]
+          in: query
+          schema:
+            type: string
+        - name: filter[timeframe]
+          in: query
+          schema:
+            type: string
+        - name: filter[type][]
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: page[number]
+          in: query
+          schema:
+            type: integer
+        - name: page[size]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of research outputs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      query:
+                        type: object
+                      response:
+                        type: object
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                      first:
+                        type: string
+                      last:
+                        type: string
+                      next:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        type:
+                          type: string
+                        attributes:
+                          type: object
+                          properties:
+                            title:
+                              type: string
+                            identifiers:
+                              type: object
+                            readers:
+                              type: object
+                              properties:
+                                mendeley:
+                                  type: integer
+                            dimensions:
+                              type: object
+                              properties:
+                                citations:
+                                  type: integer
+                            mentions:
+                              type: object
+                            altmetric-score:
+                              type: integer
+                            output-type:
+                              type: string
+                            historical-mentions:
+                              type: object
+                            publication-date:
+                              type: string
+                            badge-url:
+                              type: string
+                            oa-status:
+                              type: boolean
+                            oa-type:
+                              type: string
+                            institution:
+                              type: object
+                              properties:
+                                verified:
+                                  type: boolean
+                        relationships:
+                          type: object
+                          properties:
+                            journal:
+                              type: object
+                            institutional-authors:
+                              type: array
+                              items:
+                                type: object
+                            institutional-departments:
+                              type: array
+                              items:
+                                type: object
+                            affiliations:
+                              type: array
+                              items:
+                                type: object
+                            fields-of-research:
+                              type: array
+                              items:
+                                type: object
+                            funders:
+                              type: array
+                              items:
+                                type: object
+                            sustainable-development-goals:
+                              type: array
+                              items:
+                                type: object
+  /research_outputs/attention:
+    get:
+      operationId: getAttentionSummary
+      summary: Get attention summary
+      description: Provides aggregated attention data for research outputs matching your query.
+      parameters:
+        - name: digest
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Attention summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        meta:
+                          type: object
+                          properties:
+                            total:
+                              type: integer
+                            dates:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  date:
+                                    type: string
+                                  count:
+                                    type: integer
+  /research_outputs/demographics:
+    get:
+      operationId: getDemographics
+      summary: Get demographics
+      description: Provides aggregated location data from mentions.
+      parameters:
+        - name: digest
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: filter[filter]
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Demographics data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        attributes:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                        meta:
+                          type: object
+                          properties:
+                            mention-count:
+                              type: integer
+                            unique-sources:
+                              type: integer
+  /research_outputs/mentions:
+    get:
+      operationId: getMentions
+      summary: Get mentions
+      description: Retrieves all individual mentions of research outputs.
+      parameters:
+        - name: digest
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: filter[mention_sources][]
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: page[number]
+          in: query
+          schema:
+            type: integer
+        - name: page[size]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of mentions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        type:
+                          type: string
+                        attributes:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                            posted-on:
+                              type: string
+                            post-type:
+                              type: string
+                            summary:
+                              type: string
+                        relationships:
+                          type: object
+                          properties:
+                            author:
+                              type: object
+                            research-outputs:
+                              type: array
+                              items:
+                                type: object
+  /research_outputs/mention_sources:
+    get:
+      operationId: getMentionSources
+      summary: Get mention sources
+      description: Retrieves all mention sources of research outputs.
+      parameters:
+        - name: digest
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: filter[mention_sources_countries][]
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: page[number]
+          in: query
+          schema:
+            type: integer
+        - name: page[size]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of mention sources
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        attributes:
+                          type: object
+                          properties:
+                            profile-type:
+                              type: string
+                            name:
+                              type: string
+                            image:
+                              type: string
+                        meta:
+                          type: object
+                          properties:
+                            mention-count:
+                              type: integer
+                        relationships:
+                          type: object
+                          properties:
+                            country:
+                              type: object
+  /research_outputs/journals:
+    get:
+      operationId: getJournals
+      summary: Get journals
+      description: Retrieves aggregate information about journals and collections.
+      parameters:
+        - name: digest
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: filter[publisher_id]
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of journals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        attributes:
+                          type: object
+                          properties:
+                            title:
+                              type: string
+                            issns:
+                              type: array
+                              items:
+                                type: string
+                        meta:
+                          type: object
+                          properties:
+                            mentioned-research-outputs:
+                              type: integer
+                            total-mentions:
+                              type: integer
+                            blog:
+                              type: integer
+                            f1000:
+                              type: integer
+                            fbwall:
+                              type: integer
+                            gplus:
+                              type: integer
+                            linkedin:
+                              type: integer
+                            msm:
+                              type: integer
+                            peer_review:
+                              type: integer
+                            pinterest:
+                              type: integer
+                            policy:
+                              type: integer
+                            qna:
+                              type: integer
+                            rdt:
+                              type: integer
+                            syllabus:
+                              type: integer
+                            tweet:
+                              type: integer
+                            video:
+                              type: integer
+                            weibo:
+                              type: integer
+                            wikipedia:
+                              type: integer

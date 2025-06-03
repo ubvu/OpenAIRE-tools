@@ -1,0 +1,339 @@
+openapi: 3.1.0
+info:
+  title: OpenAlex API
+  description: This is the OpenAPI specification for the OpenAlex API.
+  version: 1.0.0
+servers:
+  - url: https://api.openalex.org
+    description: Main OpenAlex API server
+
+paths:
+  /works:
+    get:
+      operationId: getWorks
+      summary: Get a list of works
+      description: Retrieve a list of works with various filters and options.
+      parameters:
+        - name: filter
+          in: query
+          description: Filter works by various attributes
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search works by keyword
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort works by a specific attribute
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The page of results to retrieve
+          required: false
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          description: The number of results per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of works
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /works/{id}:
+    get:
+      operationId: getWorkById
+      summary: Get a single work by ID
+      description: Retrieve detailed information about a single work by its ID.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the work to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single work
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /authors:
+    get:
+      operationId: getAuthors
+      summary: Get a list of authors
+      description: Retrieve a list of authors with various filters and options.
+      parameters:
+        - name: filter
+          in: query
+          description: Filter authors by various attributes
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search authors by keyword
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort authors by a specific attribute
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The page of results to retrieve
+          required: false
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          description: The number of results per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /authors/{id}:
+    get:
+      operationId: getAuthorById
+      summary: Get a single author by ID
+      description: Retrieve detailed information about a single author by their ID.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the author to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single author
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /institutions:
+    get:
+      operationId: getInstitutions
+      summary: Get a list of institutions
+      description: Retrieve a list of institutions with various filters and options.
+      parameters:
+        - name: filter
+          in: query
+          description: Filter institutions by various attributes
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search institutions by keyword
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort institutions by a specific attribute
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The page of results to retrieve
+          required: false
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          description: The number of results per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of institutions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /institutions/{id}:
+    get:
+      operationId: getInstitutionById
+      summary: Get a single institution by ID
+      description: Retrieve detailed information about a single institution by its ID.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the institution to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single institution
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /venues:
+    get:
+      operationId: getVenues
+      summary: Get a list of venues
+      description: Retrieve a list of venues with various filters and options.
+      parameters:
+        - name: filter
+          in: query
+          description: Filter venues by various attributes
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search venues by keyword
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort venues by a specific attribute
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The page of results to retrieve
+          required: false
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          description: The number of results per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of venues
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /venues/{id}:
+    get:
+      operationId: getVenueById
+      summary: Get a single venue by ID
+      description: Retrieve detailed information about a single venue by its ID.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the venue to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single venue
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /concepts:
+    get:
+      operationId: getConcepts
+      summary: Get a list of concepts
+      description: Retrieve a list of concepts with various filters and options.
+      parameters:
+        - name: filter
+          in: query
+          description: Filter concepts by various attributes
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search concepts by keyword
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort concepts by a specific attribute
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The page of results to retrieve
+          required: false
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          description: The number of results per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of concepts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /concepts/{id}:
+    get:
+      operationId: getConceptById
+      summary: Get a single concept by ID
+      description: Retrieve detailed information about a single concept by its ID.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the concept to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single concept
+          content:
+            application/json:
+              schema:
+                type: object
