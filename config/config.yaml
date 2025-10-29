@@ -1,0 +1,23 @@
+general:
+  testing_mode: false
+
+paths:
+  data_root: "/data/ori-storage/code/data"
+  raw_subfolder: "raw"
+  extracted_subfolder: "extracted"
+  processed_subfolder: "processed"
+  identifiers_subfolder: "identifiers"
+  altmetric_subfolder: "altmetric"
+
+
+zenodo:
+  max_records: null  # optional limit for testing
+
+altmetric:
+  supported_schemes:
+    - doi
+    - pmid
+    - handle
+  batch_size: 5       # small number for testing
+  sleep_sec: 0.1      # shorter pause for testing
+  max_workers: 4      # number of parallel requests
